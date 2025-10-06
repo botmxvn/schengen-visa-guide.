@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Tương Tác Xin Visa Schengen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Neutral Slate & Sky Blue -->
+    <!-- Application Structure Plan: The application is designed as a task-oriented single-page tool. The primary information architecture choice is to force an immediate user-type selection ("Khách Thường" vs. "Khách có Công hàm") at the top. This prevents users from reading irrelevant information. Below this, the 4-step process is visualized as a clear timeline. The core of the app is the checklist section, which is dynamically displayed based on the user's initial choice. For "Khách Thường", a tabbed interface is used to break down the complex checklist into manageable categories (Personal, Work, Finance), significantly reducing cognitive load. This interactive structure is superior to a static document because it guides the user directly to the specific information they need, making the preparation process faster and less error-prone. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Visa application process and document checklists. -> Goal: Organize & Inform. -> Viz/Presentation Method: Interactive selectors and tabbed content panes. -> Interaction: User clicks to select their applicant type, then clicks tabs to navigate checklist categories. -> Justification: This approach simplifies a complex set of requirements by chunking information logically. It empowers users to control the information they see, enhancing clarity and usability. -> Library/Method: Vanilla JavaScript for DOM manipulation and event handling. Tailwind CSS for layout and styling. No charts are needed as all information is qualitative/procedural.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .main-btn.active {
+            background-color: #1d4ed8;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .step-card::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -2.5rem;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2.5rem;
+            background-color: #d1d5db;
+        }
+        .step-card:first-child::before {
+            display: none;
+        }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Hướng Dẫn Tương Tác Xin Visa Schengen</h1>
+            <p class="mt-2 text-slate-600">Công cụ tra cứu quy trình và checklist hồ sơ chi tiết</p>
+        </header>
+
+        <main>
+            <!-- User Type Selector -->
+            <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+                <h2 class="text-xl font-semibold text-center mb-4">Bạn thuộc nhóm đối tượng nào?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button id="btn-thuong" class="main-btn w-full p-4 rounded-lg text-lg font-semibold transition-all duration-300 bg-slate-100 hover:bg-slate-200 active">
+                        👤 Khách Thường (Du lịch/Công tác)
+                    </button>
+                    <button id="btn-congham" class="main-btn w-full p-4 rounded-lg text-lg font-semibold transition-all duration-300 bg-slate-100 hover:bg-slate-200">
+                        Official ‣ Khách có Công hàm
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="content-thuong" class="space-y-8">
+                <!-- Process Section -->
+                <section>
+                    <h3 class="text-2xl font-bold text-center mb-8">Quy Trình Xin Visa (4 Bước)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-6 relative">
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">1</div>
+                            <h4 class="font-semibold text-lg mb-2">Chuẩn bị Hồ sơ mềm</h4>
+                            <p class="text-slate-600 text-sm">Gửi bản scan từ hồ sơ gốc để dịch thuật công chứng. Dịch vụ không giữ bản gốc.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">2</div>
+                            <h4 class="font-semibold text-lg mb-2">Nộp Hồ sơ mềm</h4>
+                            <p class="text-slate-600 text-sm">Nộp tờ khai và toàn bộ hồ sơ đã dịch qua hệ thống online/email.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">3</div>
+                            <h4 class="font-semibold text-lg mb-2">Lấy Sinh trắc học</h4>
+                            <p class="text-slate-600 text-sm">Đến trung tâm VFS theo hẹn để lăn tay, chụp ảnh và đối chiếu hồ sơ gốc.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">4</div>
+                            <h4 class="font-semibold text-lg mb-2">Chờ Kết quả</h4>
+                            <p class="text-slate-600 text-sm">Theo dõi tiến trình hồ sơ online. Thời gian xử lý từ 15-18 ngày làm việc.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Checklist Section for Khach Thuong -->
+                <section class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-2xl font-bold text-center mb-2">Checklist Hồ Sơ Chi Tiết</h3>
+                    <p class="text-center text-slate-500 mb-6">Áp dụng tiêu chuẩn nghiêm ngặt cho Visa Du lịch Đan Mạch.</p>
+                    <div class="border-b border-gray-200 mb-6">
+                        <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
+                            <button class="tab-btn active w-full sm:w-auto text-center sm:text-left mr-2 py-4 px-1 border-b-2 font-medium text-sm" data-tab="thuong-canhan">
+                                1. Hồ sơ Cá nhân
+                            </button>
+                            <button class="tab-btn w-full sm:w-auto text-center sm:text-left mr-2 py-4 px-1 border-b-2 font-medium text-sm" data-tab="thuong-congviec">
+                                2. Hồ sơ Công việc
+                            </button>
+                             <button class="tab-btn w-full sm:w-auto text-center sm:text-left mr-2 py-4 px-1 border-b-2 font-medium text-sm" data-tab="thuong-taichinh">
+                                3. Hồ sơ Tài chính
+                            </button>
+                             <button class="tab-btn w-full sm:w-auto text-center sm:text-left py-4 px-1 border-b-2 font-medium text-sm" data-tab="thuong-congtac">
+                                4. Hồ sơ Công tác (nếu có)
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div id="tab-content-thuong-canhan" class="tab-content space-y-4">
+                         <ul class="list-disc list-inside space-y-3 text-slate-700">
+                             <li><strong>Hộ chiếu Gốc:</strong> Còn hạn ≥6 tháng (nhập cảnh) và ≥3 tháng (sau ngày rời Schengen), còn ≥2 trang trống (kèm HC cũ nếu có). Cần photo các trang có thông tin.</li>
+                            <li><strong>Ảnh thẻ:</strong> 2 ảnh ICAO 35x45mm, nền trắng. <span class="font-semibold text-red-600">Yêu cầu không trùng với mặt Hộ chiếu và các visa đã có.</span></li>
+                            <li><strong>CCCD:</strong> Bản photo.</li>
+                            <li><strong>Tình trạng hôn nhân:</strong> Đăng ký kết hôn (photo công chứng) / Quyết định ly hôn.</li>
+                             <li><strong>Cư trú:</strong> Sổ hộ khẩu hoặc CT07/CT08.</li>
+                             <li><strong>Trẻ em &lt;18 tuổi:</strong> Giấy khai sinh.</li>
+                        </ul>
+                    </div>
+                    <div id="tab-content-thuong-congviec" class="tab-content hidden space-y-4">
+                        <p class="font-semibold">Bằng chứng về sự ràng buộc tại Việt Nam:</p>
+                        <ul class="list-disc list-inside space-y-3 text-slate-700">
+                            <li><strong>Đối với Nhân viên:</strong> Hợp đồng lao động, Xác nhận công tác, Đơn xin nghỉ phép, Xác nhận lương 3 tháng gần nhất.</li>
+                            <li><strong>Đối với Chủ doanh nghiệp:</strong> Giấy đăng ký kinh doanh, Giấy tờ thuế & Biên lai nộp thuế 3 tháng gần nhất.</li>
+                            <li><strong>Đối với Người nghỉ hưu:</strong> Quyết định nghỉ hưu hoặc Sổ/Thẻ hưu trí.</li>
+                            <li><strong>Bằng chứng bổ sung:</strong> Tài khoản VSSID (ảnh chụp quá trình đóng BHXH).</li>
+                        </ul>
+                    </div>
+                     <div id="tab-content-thuong-taichinh" class="tab-content hidden space-y-4">
+                        <p class="font-semibold">Chứng minh khả năng chi trả và ý định quay về:</p>
+                        <ul class="list-disc list-inside space-y-3 text-slate-700">
+                            <li><strong>Sao kê Tài khoản Cá nhân:</strong> 3 tháng gần nhất.
+                                <ul class="list-['-_'] list-inside pl-6 mt-2 space-y-2 text-sm">
+                                    <li><span class="font-semibold text-blue-600">Số dư:</span> Phải đủ chi trả theo công thức: <span class="font-mono">Số ngày đi x 1.500.000 VNĐ/ngày</span>.</li>
+                                    <li><span class="font-semibold text-blue-600">Thời gian:</span> Phải được <span class="font-semibold">xin trước ngày lăn tay 2-3 ngày</span>.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Xác nhận Số dư STK (Sổ tiết kiệm):</strong> Nếu có, cũng cần <span class="font-semibold">xin sát ngày lăn tay 2-3 ngày.</span></li>
+                            <li><strong>Tài sản khác:</strong> Sổ đỏ, đăng ký ô tô (photo công chứng, nếu có).</li>
+                        </ul>
+                    </div>
+                     <div id="tab-content-thuong-congtac" class="tab-content hidden space-y-4">
+                        <p class="font-semibold">Chỉ áp dụng cho diện Công tác:</p>
+                        <ul class="list-disc list-inside space-y-3 text-slate-700">
+                            <li><strong>Hồ sơ công ty Việt Nam:</strong> Đăng ký kinh doanh, Sao kê tài khoản công ty (song ngữ, có dấu ngân hàng).</li>
+                            <li><strong>Hồ sơ mời:</strong> Thư mời từ đối tác (gốc/scan), Quyết định cử đi công tác, Bằng chứng giao thương (hợp đồng, email, invoice...).</li>
+                            <li><span class="font-semibold text-red-600">Lưu ý:</span> Thư mời phải nêu rõ bên chi trả chi phí.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="content-congham" class="hidden space-y-8">
+                <!-- Process Section -->
+                 <section>
+                    <h3 class="text-2xl font-bold text-center mb-8">Quy Trình Xin Visa (4 Bước)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-6 relative">
+                         <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">1</div>
+                            <h4 class="font-semibold text-lg mb-2">Chuẩn bị Hồ sơ mềm</h4>
+                            <p class="text-slate-600 text-sm">Gửi bản scan từ hồ sơ gốc để dịch thuật công chứng. Dịch vụ không giữ bản gốc.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">2</div>
+                            <h4 class="font-semibold text-lg mb-2">Nộp Hồ sơ mềm</h4>
+                            <p class="text-slate-600 text-sm">Nộp tờ khai và toàn bộ hồ sơ đã dịch qua hệ thống online/email.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">3</div>
+                            <h4 class="font-semibold text-lg mb-2">Lấy Sinh trắc học</h4>
+                            <p class="text-slate-600 text-sm">Đến trung tâm VFS theo hẹn để lăn tay, chụp ảnh và đối chiếu hồ sơ gốc.</p>
+                        </div>
+                        <div class="step-card relative flex flex-col items-center text-center p-4">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-4 border-4 border-white shadow-md">4</div>
+                            <h4 class="font-semibold text-lg mb-2">Chờ Kết quả</h4>
+                            <p class="text-slate-600 text-sm">Theo dõi tiến trình hồ sơ online. Thời gian xử lý từ 15-18 ngày làm việc.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Checklist Section for Khach Co Cong Ham -->
+                <section class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-2xl font-bold text-center mb-6">Checklist Hồ Sơ Chi Tiết</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-3 border-b pb-2">A. Hồ sơ Đương đơn (Yêu cầu pháp lý)</h4>
+                            <ul class="list-disc list-inside space-y-3 text-slate-700">
+                                <li><strong>Hộ chiếu Công vụ:</strong> Bản gốc còn hiệu lực (hạn ≥3 tháng sau ngày rời Schengen). Cần photo các trang có thông tin.</li>
+                                <li><strong>Công hàm (Note Verbale):</strong> Bản gốc do Cục Lãnh sự - BNG Việt Nam cấp. Đây là giấy tờ <span class="font-semibold">then chốt</span>.</li>
+                                <li><strong>Quyết định Công tác:</strong> Bản gốc từ cơ quan chủ quản.</li>
+                                <li><strong>Tờ khai & Ảnh:</strong> Tờ khai in ra, có <span class="font-semibold">chữ ký</span>. 1 ảnh 3.5x4.5cm nền trắng.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-3 border-b pb-2">B. Hồ sơ Bên mời (Yêu cầu minh bạch)</h4>
+                            <ul class="list-disc list-inside space-y-3 text-slate-700">
+                                <li><strong>Thư mời (Invitation Letter):</strong> Bản in rõ nét, đầy đủ thông tin người mời, người được mời, mục đích, thời gian, lịch trình.</li>
+                                <li><strong>Nội dung chi phí:</strong> Thư mời phải nêu rõ <span class="font-semibold text-red-600">cơ quan/tổ chức nào sẽ thanh toán chi phí</span> cho chuyến đi.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-8 border-t pt-6 bg-blue-50 p-4 rounded-lg">
+                         <h4 class="font-semibold text-lg mb-3 text-blue-800">❗ Ghi Chú Chi Tiết Quan Trọng</h4>
+                         <ul class="list-disc list-inside space-y-3 text-slate-700 text-sm">
+                            <li>Thông tin trong <span class="font-semibold">Quyết định Công tác</span> phải khớp với <span class="font-semibold">Thư mời</span> về mục đích, thời gian và bên chi trả.</li>
+                            <li>Khi đi lấy sinh trắc học, cần mang theo bản gốc Hộ chiếu Công vụ và bản sao các trang có thông tin.</li>
+                            <li>Mục đích chuyến đi trong thư mời cần được mô tả chi tiết nhất có thể (họp, hội thảo, ký kết...).</li>
+                         </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="text-center mt-12 text-sm text-slate-500">
+            <p>Thông tin được cập nhật dựa trên các yêu cầu mới nhất. Vui lòng sử dụng như một tài liệu tham khảo.</p>
+        </footer>
+    </div>
+
+    <script>
+        const btnThuong = document.getElementById('btn-thuong');
+        const btnCongham = document.getElementById('btn-congham');
+        const contentThuong = document.getElementById('content-thuong');
+        const contentCongham = document.getElementById('content-congham');
+        const mainBtns = [btnThuong, btnCongham];
+
+        // Main content switcher
+        btnThuong.addEventListener('click', () => {
+            contentThuong.classList.remove('hidden');
+            contentCongham.classList.add('hidden');
+            btnThuong.classList.add('active');
+            btnCongham.classList.remove('active');
+        });
+
+        btnCongham.addEventListener('click', () => {
+            contentCongham.classList.remove('hidden');
+            contentThuong.classList.add('hidden');
+            btnCongham.classList.add('active');
+            btnThuong.classList.remove('active');
+        });
+
+        // Tab switcher for Khach Thuong
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+
+                tabBtns.forEach(innerBtn => innerBtn.classList.remove('active'));
+                btn.classList.add('active');
+
+                tabContents.forEach(content => {
+                    if (content.id === 'tab-content-' + tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
