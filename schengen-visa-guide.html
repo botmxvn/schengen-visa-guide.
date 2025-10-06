@@ -242,6 +242,14 @@
     </div>
 
     <script>
+        // Start: Tự động chuyển hướng nếu người dùng quên nhập tên file (Khắc phục lỗi 404 trên GitHub Pages)
+        const expectedFilename = 'interactive-visa-guide.html';
+        if (!window.location.pathname.endsWith(expectedFilename) && !window.location.pathname.endsWith('/')) {
+            const newPath = window.location.pathname.endsWith('/') ? expectedFilename : '/' + expectedFilename;
+            window.location.replace(window.location.href.split('/').slice(0, -1).join('/') + newPath);
+        }
+        // End: Tự động chuyển hướng
+        
         const btnThuong = document.getElementById('btn-thuong');
         const btnCongham = document.getElementById('btn-congham');
         const contentThuong = document.getElementById('content-thuong');
